@@ -3,18 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Bubble Pop Game</title>
+    <title>Bubble Pop Challenge</title>
 
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-    <h1>Bubble Pop Game</h1>
+    <h1>Bubble Pop Challenge</h1>
 
-    <!-- game -->
+    <div class="game-info">
+        <p>Score: <span id="score">0</span></p>
+        <p>Lives: <span id="lives">3</span></p>
+    </div>
 
+    <div id="game-area"></div>
+
+    <button id="restart-btn">Restart Game</button>
+
+    <p id="message"></p>
 
     <script src="js/game.js"></script>
 </body>
