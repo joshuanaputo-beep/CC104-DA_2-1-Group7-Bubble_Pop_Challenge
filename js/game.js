@@ -5,6 +5,7 @@ let lives = 3;
 let nextBubbleId = 1;
 let gameRunning = true;
 
+
 // GET HTML ELEMENTS
 const gameArea = document.getElementById("game-area");
 const scoreDisplay = document.getElementById("score");
@@ -12,99 +13,176 @@ const livesDisplay = document.getElementById("lives");
 const restartButton = document.getElementById("restart-btn");
 const message = document.getElementById("message");
 
-// CREATE & DISPLAY BUBBLE COMBINED
-function spawnBubble() {
-    if (!gameRunning) return;
 
-    const size = 30; // Fixed starting size
+// CREATE A BUBBLE
+function createBubble() {
+    const size = Math.floor(Math.random() * 30) + 30;
+
     const bubble = {
-        id: nextBubbleId++,
+        id: nextBubbleId,
         size: size,
         x: Math.random() * (600 - size),
         y: Math.random() * (400 - size)
     };
 
     bubbles.push(bubble);
+    nextBubbleId++;
+}
 
+
+// DISPLAY A BUBBLE
+function displayBubble(bubble) {
     const bubbleElement = document.createElement("div");
+
     bubbleElement.classList.add("bubble");
     bubbleElement.id = "bubble-" + bubble.id;
+
     bubbleElement.style.width = bubble.size + "px";
     bubbleElement.style.height = bubble.size + "px";
     bubbleElement.style.left = bubble.x + "px";
     bubbleElement.style.top = bubble.y + "px";
 
-    bubbleElement.onclick = function () {
+    bubbleElement.addEventListener("click", function () {
         popBubble(bubble.id);
-    };
+    });
 
     gameArea.appendChild(bubbleElement);
 }
 
-// POP BUBBLE
-function popBubble(id) {
-    if (!gameRunning) return;
 
-    const index = bubbles.findIndex(b => b.id === id);
-    if (index !== -1) {
-        bubbles.splice(index, 1);
-        const el = document.getElementById("bubble-" + id);
-        if (el) el.remove();
-        
+// SPAWN A NEW BUBBLE
+function spawnBubble() {
+    if (!gameRunning) {
+        return;
+    }
+
+    createBubble();
+
+    const newBubble = bubbles[bubbles.length - 1];
+    displayBubble(newBubble);
+}
+
+// POP A BUBBLE
+function popBubble(id) {
+    if (!gameRunning) {
+        return;
+    }
+
+    const bubbleIndex = bubbles.findIndex(function (bubble) {
+        return bubble.id === id;
+    });
+
+    if (bubbleIndex !== -1) {
+        bubbles.splice(bubbleIndex, 1);
+
+        const bubbleElement = document.getElementById("bubble-" + id);
+
+        if (bubbleElement) {
+            bubbleElement.remove();
+        }
+
         score++;
         updateDisplay();
     }
 }
 
-// GROW & BURST CHECK COMBINED
-function growBubbles() {
-    if (!gameRunning) return;
 
-    for (let i = bubbles.length - 1; i >= 0; i--) {
-        const bubble = bubbles[i];
+// GROW THE BUBBLES
+function growBubbles() {
+    if (!gameRunning) {
+        return;
+    }
+
+    bubbles.forEach(function (bubble) {
         bubble.size += 2;
 
-        const el = document.getElementById("bubble-" + bubble.id);
-        if (el) {
-            el.style.width = bubble.size + "px";
-            el.style.height = bubble.size + "px";
+        const bubbleElement = document.getElementById(
+            "bubble-" + bubble.id
+        );
+
+        if (bubbleElement) {
+            bubbleElement.style.width = bubble.size + "px";
+            bubbleElement.style.height = bubble.size + "px";
+        }
+    });
+
+    checkBurstBubbles();
+}
+
+
+// CHECK FOR BURST BUBBLES
+function checkBurstBubbles() {
+    const maxSize = 100;
+
+    const burstBubbles = bubbles.filter(function (bubble) {
+        return bubble.size >= maxSize;
+    });
+
+    burstBubbles.forEach(function (bubble) {
+        const bubbleElement = document.getElementById(
+            "bubble-" + bubble.id
+        );
+
+        if (bubbleElement) {
+            bubbleElement.remove();
         }
 
-        // Burst if too big
-        if (bubble.size >= 100) {
-            if (el) el.remove();
-            bubbles.splice(i, 1);
-            lives--;
-            updateDisplay();
+        lives--;
+    });
 
-            if (lives <= 0) {
-                gameRunning = false;
-                message.textContent = "Game Over!";
-            }
-        }
+    bubbles = bubbles.filter(function (bubble) {
+        return bubble.size < maxSize;
+    });
+
+    updateDisplay();
+
+    if (lives <= 0) {
+        gameOver();
     }
 }
 
-// UPDATE DISPLAY
+
+
+// UPDATE SCORE AND LIVES
 function updateDisplay() {
     scoreDisplay.textContent = score;
     livesDisplay.textContent = lives;
 }
 
-// RESTART GAME
+
+
+// GAME OVER
+function gameOver() {
+    gameRunning = false;
+    message.textContent = "Game Over!";
+}
+
+
+
+// RESTART THE GAME
 function restartGame() {
     bubbles = [];
     score = 0;
     lives = 3;
     nextBubbleId = 1;
     gameRunning = true;
+
     gameArea.innerHTML = "";
     message.textContent = "";
+
     updateDisplay();
 }
 
-// TIMERS & EVENT LISTENERS
+
+
+// GAME TIMERS
 setInterval(spawnBubble, 1500);
 setInterval(growBubbles, 500);
+
+
+// RESTART BUTTON
 restartButton.addEventListener("click", restartGame);
+
+
+// Start with the correct display
 updateDisplay();
