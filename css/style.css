@@ -1,35 +1,77 @@
-body {
-    text-align: center;
-    font-family: Arial, sans-serif;
-    background-color: #F2EBE1;
-    color: #2C2A29
+:root {
+  --deep: #062c3a;
+  --water: #0b4a5e;
+  --foam: #e8fbff;
+  --panel: rgba(255, 255, 255, 0.08);
 }
 
-.game-info {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
+body {
+  min-height: 100vh;
+  color: var(--foam);
+  font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  background: radial-gradient(ellipse at 50% 0%, var(--water), var(--deep) 70%) fixed;
 }
+
+.game-shell { max-width: 860px; }
+.subtitle { color: rgba(232, 251, 255, 0.7); font-size: 0.9rem; }
+
+.stat {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.5rem 0.9rem; border-radius: 0.6rem; background: var(--panel);
+}
+.stat-label { font-size: 0.85rem; color: rgba(232, 251, 255, 0.7); }
+.stat-value { font-size: 1.4rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.life {
+  display: inline-block; width: 16px; height: 16px; margin-left: 4px; border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff, #7fe3f5 70%);
+  transition: opacity 0.2s, transform 0.2s;
+}
+.life.lost { opacity: 0.15; transform: scale(0.6); }
 
 #game-area {
-    width: 600px;
-    height: 400px;
-    margin: 20px auto;
-    border: 3px solid black;
-    position: relative;
-    overflow: hidden;
-    background-color: #D98880;
+  position: relative; height: 460px; overflow: hidden; border-radius: 0.8rem;
+  border: 2px solid rgba(232, 251, 255, 0.35);
+  background: linear-gradient(180deg, #0f6178 0%, #08384a 100%);
+  user-select: none; -webkit-user-select: none; touch-action: manipulation;
 }
+#game-area.burst { animation: shake 0.3s; border-color: #ff6b5e; }
 
 .bubble {
-    position: absolute;
-    border-radius: 50%;
-    background-color: lightblue;
-    cursor: pointer;
+  position: absolute; border-radius: 50%; cursor: pointer;
+  --hue: 190;
+  background: radial-gradient(circle at 30% 28%, rgba(255,255,255,0.9) 0 12%,
+              hsla(var(--hue), 85%, 65%, 0.35) 45%, hsla(var(--hue), 85%, 50%, 0.6) 100%);
+  border: 2px solid hsla(var(--hue), 90%, 75%, 0.9);
+  box-shadow: 0 0 10px hsla(var(--hue), 90%, 60%, 0.5);
 }
 
-button {
-    padding: 10px 20px;
-    cursor: pointer;
-    background-color: #556B2F;
+.float-score {
+  position: absolute; pointer-events: none; font-weight: 700; color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5); animation: floatUp 0.7s ease-out forwards;
+}
+.float-score.bad { color: #ff9a90; }
+
+#overlay {
+  position: absolute; inset: 0; z-index: 10; padding: 1.5rem; text-align: center;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: rgba(6, 44, 58, 0.82);
+}
+#overlay.hidden { display: none; }
+#overlay p { max-width: 36ch; }
+
+#data-panel { background: var(--panel); border-radius: 0.6rem; padding: 0.6rem 0.9rem; }
+#data-panel summary { cursor: pointer; }
+#data-view {
+  color: var(--foam); max-height: 180px; overflow: auto; margin-top: 0.5rem; font-size: 0.85rem;
+}
+
+@keyframes floatUp { to { transform: translateY(-36px); opacity: 0; } }
+@keyframes shake {
+  25% { transform: translateX(-6px); } 50% { transform: translateX(6px); } 75% { transform: translateX(-3px); }
+}
+
+@media (max-width: 576px) { #game-area { height: 380px; } }
+@media (prefers-reduced-motion: reduce) {
+  #game-area.burst, .float-score { animation: none; }
 }
