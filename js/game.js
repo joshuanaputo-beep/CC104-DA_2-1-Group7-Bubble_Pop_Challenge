@@ -1,3 +1,4 @@
+
 /* Bubble Pop Challenge - Enhanced Edition */
 
 $(function () {
