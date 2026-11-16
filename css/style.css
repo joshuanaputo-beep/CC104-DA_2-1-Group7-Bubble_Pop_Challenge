@@ -3,42 +3,128 @@
   --water: #0b4a5e;
   --foam: #e8fbff;
   --panel: rgba(255, 255, 255, 0.08);
+  --theme-accent: #7fe3f5;
 }
 
+/* Dynamic Themes (Transition smoothly as level rises) */
 body {
   min-height: 100vh;
   color: var(--foam);
   font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
   background: radial-gradient(ellipse at 50% 0%, var(--water), var(--deep) 70%) fixed;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.8s ease;
 }
 
-.game-shell { max-width: 860px; }
+body.theme-lvl-1 {
+  --deep: #062c3a; --water: #0b4a5e; --theme-accent: #7fe3f5;
+}
+body.theme-lvl-2 {
+  --deep: #2c063a; --water: #640b5e; --theme-accent: #f57fe7; /* Neon Cyber */
+}
+body.theme-lvl-3 {
+  --deep: #063a1e; --water: #0b5e39; --theme-accent: #7ff5a2; /* Toxic Glow */
+}
+body.theme-lvl-4 {
+  --deep: #3a1106; --water: #5e260b; --theme-accent: #f5aa7f; /* Volcanic Flare */
+}
+
+.game-shell { max-width: 860px; width: 100%; }
 .subtitle { color: rgba(232, 251, 255, 0.7); font-size: 0.9rem; }
 
+/* Stat Display Boxes */
 .stat {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 0.5rem 0.9rem; border-radius: 0.6rem; background: var(--panel);
+  display: flex; 
+  flex-direction: column;
+  justify-content: center; 
+  align-items: center;
+  padding: 0.5rem 0.9rem; 
+  border-radius: 0.6rem; 
+  background: var(--panel);
 }
-.stat-label { font-size: 0.85rem; color: rgba(232, 251, 255, 0.7); }
-.stat-value { font-size: 1.4rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.stat-label { font-size: 0.8rem; color: rgba(232, 251, 255, 0.7); text-transform: uppercase; }
+.stat-value { font-size: 1.3rem; font-weight: 700; font-variant-numeric: tabular-nums; }
 
-.life {
-  display: inline-block; width: 16px; height: 16px; margin-left: 4px; border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #fff, #7fe3f5 70%);
-  transition: opacity 0.2s, transform 0.2s;
+.level-badge { color: var(--theme-accent); }
+.combo-badge { color: #ffd43b; }
+
+/* Heart SVG Life Display */
+.hearts-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
-.life.lost { opacity: 0.15; transform: scale(0.6); }
 
+.heart-icon {
+  width: 18px;
+  height: 18px;
+  fill: #ff6b5e;
+  filter: drop-shadow(0 0 4px rgba(255, 107, 94, 0.6));
+  transition: all 0.25s ease;
+}
+
+.heart-icon.lost {
+  fill: rgba(232, 251, 255, 0.2);
+  filter: none;
+  opacity: 0.3;
+  transform: scale(0.75);
+}
+
+/* Game Play Area */
 #game-area {
-  position: relative; height: 460px; overflow: hidden; border-radius: 0.8rem;
+  position: relative; 
+  height: 460px; 
+  overflow: hidden; 
+  border-radius: 0.8rem;
   border: 2px solid rgba(232, 251, 255, 0.35);
-  background: linear-gradient(180deg, #0f6178 0%, #08384a 100%);
-  user-select: none; -webkit-user-select: none; touch-action: manipulation;
+  background: linear-gradient(180deg, var(--water) 0%, var(--deep) 100%);
+  user-select: none; 
+  -webkit-user-select: none; 
+  touch-action: manipulation;
+  transition: border-color 0.4s ease, background 0.8s ease;
 }
-#game-area.burst { animation: shake 0.3s; border-color: #ff6b5e; }
 
+#game-area.burst { 
+  animation: shake 0.3s; 
+  border-color: #ff6b5e; 
+}
+
+#game-area.freeze-active {
+  border-color: #74c0fc;
+  box-shadow: inset 0 0 25px rgba(116, 192, 252, 0.5);
+}
+
+/* Level Up Banner Overlay */
+.level-banner {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--theme-accent);
+  color: #062c3a;
+  padding: 6px 18px;
+  border-radius: 20px;
+  font-weight: 800;
+  font-size: 0.9rem;
+  z-index: 15;
+  box-shadow: 0 0 15px var(--theme-accent);
+  animation: bounceIn 0.5s ease;
+}
+
+@keyframes bounceIn {
+  0% { transform: translate(-50%, -20px); opacity: 0; }
+  100% { transform: translate(-50%, 0); opacity: 1; }
+}
+
+/* Base Bubble Styles */
 .bubble {
-  position: absolute; border-radius: 50%; cursor: pointer;
+  position: absolute; 
+  border-radius: 50%; 
+  cursor: pointer;
   --hue: 190;
   background: radial-gradient(circle at 30% 28%, rgba(255,255,255,0.9) 0 12%,
               hsla(var(--hue), 85%, 65%, 0.35) 45%, hsla(var(--hue), 85%, 50%, 0.6) 100%);
@@ -46,16 +132,63 @@ body {
   box-shadow: 0 0 10px hsla(var(--hue), 90%, 60%, 0.5);
 }
 
+/* Special Bubble Variants */
+.bubble.golden {
+  background: radial-gradient(circle at 30% 28%, #fff, #ffd43b 50%, #f59f00 100%) !important;
+  border-color: #ffe066 !important;
+  box-shadow: 0 0 15px #ffd43b !important;
+  animation: pulseGold 1s infinite alternate;
+}
+
+.bubble.bomb {
+  background: radial-gradient(circle at 30% 28%, #868e96, #212529 70%) !important;
+  border-color: #ff6b5e !important;
+  box-shadow: 0 0 12px rgba(255, 107, 94, 0.8) !important;
+}
+
+.bubble.freeze {
+  background: radial-gradient(circle at 30% 28%, #fff, #74c0fc 50%, #1c7ed6 100%) !important;
+  border-color: #a5d8ff !important;
+  box-shadow: 0 0 15px #74c0fc !important;
+}
+
+.bubble.chain {
+  background: radial-gradient(circle at 30% 28%, #fff, #da77f2 50%, #9c36b5 100%) !important;
+  border-color: #f3d9fa !important;
+  box-shadow: 0 0 15px #da77f2 !important;
+}
+
+@keyframes pulseGold {
+  from { transform: scale(1); }
+  to { transform: scale(1.06); }
+}
+
+/* Floating Text FX */
 .float-score {
-  position: absolute; pointer-events: none; font-weight: 700; color: #fff;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.5); animation: floatUp 0.7s ease-out forwards;
+  position: absolute; 
+  pointer-events: none; 
+  font-weight: 700; 
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5); 
+  animation: floatUp 0.7s ease-out forwards;
 }
 .float-score.bad { color: #ff9a90; }
+.float-score.gold { color: #ffd43b; }
+.float-score.freeze { color: #74c0fc; }
 
 #overlay {
-  position: absolute; inset: 0; z-index: 10; padding: 1.5rem; text-align: center;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  background: rgba(6, 44, 58, 0.82);
+  position: absolute; 
+  inset: 0; 
+  z-index: 10; 
+  padding: 1.5rem; 
+  text-align: center;
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center;
+  background: rgba(6, 44, 58, 0.88);
+  backdrop-filter: blur(4px);
+  transition: opacity 0.3s ease;
 }
 #overlay.hidden { display: none; }
 #overlay p { max-width: 36ch; }
