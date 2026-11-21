@@ -81,7 +81,9 @@ $(function () {
       type: getRandomType(),
       size: START_SIZE,
       x: randomInt(half, w - half),
-      y: randomInt(half, h - half)
+      y: randomInt(half, h - half),
+      vx: (Math.random() - 0.5) * 1.6,
+      vy: (Math.random() - 0.5) * 1.6
     });
     render();
   }
@@ -125,7 +127,15 @@ $(function () {
     }
 
     // Traversal: Grow bubbles
-    bubbles.forEach(function (b) { b.size += activeGrowth; });
+   const w = $area.width(), h = $area.height();
+    bubbles.forEach(function (b) {
+      b.size += activeGrowth;
+      b.x += b.vx;
+      b.y += b.vy;
+      const r = b.size / 2;
+      if (b.x - r < 0 || b.x + r > w) b.vx *= -1;
+      if (b.y - r < 0 || b.y + r > h) b.vy *= -1;
+    });
 
     // Removal: burst overflowing bubbles
     const burst = bubbles.filter(function (b) { return b.size >= MAX_SIZE; });
