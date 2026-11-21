@@ -153,6 +153,7 @@ $(function () {
     if (!running) return;
     const b = findBubbleById(id);
     if (b === null) return;
+  bubbles = bubbles.filter(function (item) { return item.id !== id; });
 
     const now = Date.now();
     if (!isChainTrigger) {
@@ -180,7 +181,6 @@ $(function () {
       floatText(b.x, b.y, "BOOM!", "gold");
       // Find nearby bubbles within 140px radius
       const nearby = bubbles.filter(other => other.id !== b.id && getDistance(b, other) < 140);
-      bubbles = bubbles.filter(function (item) { return item.id !== id; });
       nearby.forEach(target => popBubble(target.id, true));
     }
 
@@ -191,7 +191,6 @@ $(function () {
       floatText(b.x, b.y, text, false);
     }
 
-    bubbles = bubbles.filter(function (item) { return item.id !== id; });
     updateLevelAndTheme();
     render();
 
