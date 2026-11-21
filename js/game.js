@@ -34,6 +34,7 @@ $(function () {
   let nextId = 1;
   let score = 0, popped = 0, lives = MAX_LIVES, currentLevel = 1;
   let comboCount = 0, lastPopTime = 0;
+  let bestScore = parseInt(localStorage.getItem("bubbleBestScore") || "0", 10);
   let running = false;
   let freezeTimerMs = 0;
   let tickTimer = null, spawnTimer = null;
@@ -232,6 +233,10 @@ $(function () {
   function endGame() {
     running = false;
     stopTimers();
+    if (score > bestScore) {
+      bestScore = score;
+      localStorage.setItem("bubbleBestScore", bestScore);
+    }
     $("#overlay-title").text("Game Over");
     $("#overlay-text").text(`You reached Level ${currentLevel}, popped ${popped} bubbles, and scored ${score} points!`);
     $("#btn-start").text("Play Again");
@@ -306,6 +311,7 @@ $(function () {
 
     // 3. UI Indicators
     $("#score").text(score);
+    $("#best-score").text(bestScore);
     $("#popped").text(popped);
     $("#level-display").text("Lvl " + currentLevel);
     $("#combo-display").text("x" + Math.max(1, comboCount));
