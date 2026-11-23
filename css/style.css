@@ -6,7 +6,7 @@
   --theme-accent: #7fe3f5;
 }
 
-/* Dynamic Themes (Transition smoothly as level rises) */
+
 body {
   min-height: 100vh;
   color: var(--foam);
