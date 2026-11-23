@@ -27,12 +27,24 @@
     <div id="lives-container" class="hearts-wrapper"></div>
   </div>
 </div>
-      <div class="col-12 mt-2">
-        <div class="stat py-1 flex-row gap-2">
-          <span class="stat-label mb-0">Best Score:</span>
-          <span id="best-score" class="stat-value fs-6 text-warning">0</span>
-        </div>
-      </div>
+<div class="row g-2 mt-2">
+  <!-- Best Score Box -->
+  <div class="col-6">
+    <div class="stat">
+      <span class="stat-label">Best Score</span>
+      <span id="best-score" class="stat-value text-warning">0</span>
+    </div>
+  </div>
+
+  <!-- Current Level Box -->
+  <div class="col-6">
+    <div class="stat">
+      <span class="stat-label">Current Level</span>
+      <span id="level-display" class="stat-value level-badge">Lvl 1</span>
+    </div>
+  </div>
+</div>
+
     </section>
 
     <div id="game-area" role="application" aria-label="Bubble play area">
