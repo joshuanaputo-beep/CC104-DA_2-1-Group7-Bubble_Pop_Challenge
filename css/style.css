@@ -165,6 +165,31 @@ body.theme-lvl-5 { --deep: #050b30;  --water: #1535a8; --theme-accent: #00e5ff;/
   to { transform: scale(1.06); }
 }
 
+/* Shockwave Effect */
+.shockwave {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  border: 3px solid #ffd43b;
+  transform: translate(-50%, -50%) scale(0.2);
+  animation: rippleOut 0.55s ease-out forwards;
+}
+
+.shockwave.freeze {
+  border-color: #74c0fc;
+}
+
+.shockwave.bad {
+  border-color: #ff6b5e;
+}
+
+@keyframes rippleOut {
+  to {
+    transform: translate(-50%, -50%) scale(2.8);
+    opacity: 0;
+  }
+}
+
 /* Floating Text FX */
 .float-score {
   position: absolute; 

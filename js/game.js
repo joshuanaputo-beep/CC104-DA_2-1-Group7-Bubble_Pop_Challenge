@@ -259,7 +259,7 @@ const LEVELS = [
       lives = Math.max(0, lives - 1);
 
       floatText(b.x, b.y, "-1 Life!", "bad");
-
+      spawnShockwave(b.x, b.y, "bad");
       comboCount = 0;
 
       // SOUND ADDED: Wrong sound when decoy/bomb is popped
@@ -276,9 +276,11 @@ const LEVELS = [
       freezeTimerMs = 4000;
 
       floatText(b.x, b.y, "FREEZE!", "freeze");
-
+      spawnShockwave(b.x, b.y, "freeze");
+      
     } else if (b.type === TYPES.CHAIN) {
-      floatText(b.x, b.y, "BOOM!", "gold");
+      floatText (b.x, b.y, "BOOM!", "gold")
+      spawnShockwave(b.x, b.y, "");
 
       // Find nearby bubbles within 140px radius
 
@@ -455,6 +457,18 @@ function togglePause() {
       $t.remove();
     }, 700);
   }
+
+  function spawnShockwave(x, y, type) {
+  const $s = $("<span class='shockwave'></span>")
+    .css({ left: x, top: y, width: 70, height: 70 })
+    .appendTo($area);
+
+  if (type) $s.addClass(type);
+
+  setTimeout(function () {
+    $s.remove();
+  }, 550);
+}
 
   function renderHearts() {
     const $container = $("#lives-container").empty();
