@@ -362,7 +362,7 @@ if (feverTimerMs > 0) {
       .addClass("theme-lvl-1");
 
     $("#overlay").addClass("hidden");
-
+    $("#bubble-instructions").hide(); 
     spawnBubble();
 
     tickTimer = setInterval(tick, TICK_MS);
@@ -393,6 +393,7 @@ function togglePause() {
         $("#btn-pause").text("Pause");
         $("#btn-start").removeClass("d-none");
         $("#overlay").addClass("hidden");
+        $("#bubble-instructions").hide();
         tickTimer = setInterval(tick, TICK_MS);
         spawnTimer = setInterval(spawnBubble, LEVELS[currentLevel - 1].spawnMs);
     }
@@ -416,7 +417,8 @@ function togglePause() {
       `You reached Level ${currentLevel}, popped ${popped} bubbles, and scored ${score} points!`
     );
 
-    $("#btn-start").text("Play Again");
+$("#btn-start").text("▶ PLAY AGAIN");
+$("#bubble-instructions").show();
 
     $("#overlay").removeClass("hidden");
   }
@@ -446,13 +448,15 @@ function togglePause() {
     $body.removeClass("theme-lvl-2 theme-lvl-3 theme-lvl-4")
       .addClass("theme-lvl-1");
 
-    $("#overlay-title").text("Ready for the Challenge?");
+   $("#overlay-title").text("BUBBLE POP CHALLENGE!");
 
-    $("#overlay-text").text(
-      "Pop bubbles before they burst! Watch for Golden (Extra Life), Freeze (Slow Motion), Bomb (Hazard), and Chain Reaction bubbles."
-    );
+$("#overlay-text").text(
+  "Pop bubbles before they burst! You have 3 lives."
+);
 
-    $("#btn-start").text("Start Game");
+$("#bubble-instructions").show();
+
+$("#btn-start").text("▶ START GAME");
 
     $("#overlay").removeClass("hidden");
 
