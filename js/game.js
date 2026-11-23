@@ -60,6 +60,8 @@ const LEVELS = [
 
   let running = false;
 
+  let paused = false;
+
   let freezeTimerMs = 0;
 
   let tickTimer = null, spawnTimer = null;
@@ -330,6 +332,10 @@ const LEVELS = [
 
     running = true;
 
+    paused = false;
+    $("#btn-pause").prop("disabled", false).text("Pause");
+    $("#btn-start").removeClass("d-none");
+
     $body.removeClass("theme-lvl-2 theme-lvl-3 theme-lvl-4")
       .addClass("theme-lvl-1");
 
@@ -347,12 +353,35 @@ const LEVELS = [
   function stopTimers() {
     clearInterval(tickTimer);
     clearInterval(spawnTimer);
-  }
+}
+
+function togglePause() {
+    if (!running) return;
+
+    paused = !paused;
+
+    if (paused) {
+        stopTimers();
+        $("#btn-pause").text("Resume");
+        $("#overlay-title").text("Game Paused");
+        $("#overlay-text").text("Press Resume or hit 'P' to continue.");
+        $("#btn-start").addClass("d-none");
+        $("#overlay").removeClass("hidden");
+    } else {
+        $("#btn-pause").text("Pause");
+        $("#btn-start").removeClass("d-none");
+        $("#overlay").addClass("hidden");
+        tickTimer = setInterval(tick, TICK_MS);
+        spawnTimer = setInterval(spawnBubble, LEVELS[currentLevel - 1].spawnMs);
+    }
+}
 
   function endGame() {
     running = false;
 
     stopTimers();
+
+    $("#btn-pause").prop("disabled", true);
 
     if (score > bestScore) {
       bestScore = score;
@@ -371,6 +400,9 @@ const LEVELS = [
   }
 
   function resetGame() {
+    paused = false;
+    $("#btn-pause").prop("disabled", true).text("Pause");
+    $("#btn-start").removeClass("d-none");
     running = false;
 
     stopTimers();
@@ -508,6 +540,11 @@ const LEVELS = [
 
   $("#btn-start").on("click", startGame);
   $("#btn-reset").on("click", resetGame);
+  $("#btn-pause").on("click", togglePause);
+
+  $(document).on("keydown", function (e) {
+    if (e.key === "p" || e.key === "P") togglePause();
+  });
 
   resetGame();
 
