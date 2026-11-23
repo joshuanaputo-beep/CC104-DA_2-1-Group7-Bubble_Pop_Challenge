@@ -31,6 +31,8 @@ body.theme-lvl-3 {
 body.theme-lvl-4 {
   --deep: #3a1106; --water: #5e260b; --theme-accent: #f5aa7f; /* Volcanic Flare */
 }
+body.theme-lvl-5 { --deep: #050b30;  --water: #1535a8; --theme-accent: #00e5ff;/* Electric Blue */
+}
 
 .game-shell { max-width: 860px; width: 100%; }
 .subtitle { color: rgba(232, 251, 255, 0.7); font-size: 0.9rem; }

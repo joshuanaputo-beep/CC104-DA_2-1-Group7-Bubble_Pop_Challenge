@@ -28,12 +28,14 @@ function playSound(audio) {
 
   // Level milestones (Score thresholds)
 
-  const LEVELS = [
-    { level: 1, minScore: 0, theme: "theme-lvl-1", growth: 0.8, spawnMs: 1100 },
-    { level: 2, minScore: 150, theme: "theme-lvl-2", growth: 1.0, spawnMs: 950 },
-    { level: 3, minScore: 400, theme: "theme-lvl-3", growth: 1.2, spawnMs: 800 },
-    { level: 4, minScore: 800, theme: "theme-lvl-4", growth: 1.4, spawnMs: 650 }
-  ];
+
+const LEVELS = [
+  { level: 1, minScore: 0, theme: "theme-lvl-1", growth: 0.8, spawnMs: 1100 },
+  { level: 2, minScore: 150, theme: "theme-lvl-2", growth: 1.0, spawnMs: 950 },
+  { level: 3, minScore: 400, theme: "theme-lvl-3", growth: 1.2, spawnMs: 800 },
+  { level: 4, minScore: 800, theme: "theme-lvl-4", growth: 1.4, spawnMs: 650 },
+  { level: 5, minScore: 1200, theme: "theme-lvl-5", growth: 1.6, spawnMs: 500 }
+];
 
   // Special bubble types configuration
 
@@ -137,7 +139,7 @@ function playSound(audio) {
     if (targetLvl.level !== currentLevel) {
       currentLevel = targetLvl.level;
 
-      $body.removeClass("theme-lvl-1 theme-lvl-2 theme-lvl-3 theme-lvl-4")
+    $body.removeClass("theme-lvl-1 theme-lvl-2 theme-lvl-3 theme-lvl-4 theme-lvl-5")
         .addClass(targetLvl.theme);
 
       // Adjust spawn timer interval
