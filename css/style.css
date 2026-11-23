@@ -100,6 +100,12 @@ body.theme-lvl-5 { --deep: #050b30;  --water: #1535a8; --theme-accent: #00e5ff;/
   box-shadow: inset 0 0 25px rgba(116, 192, 252, 0.5);
 }
 
+/* Fever Mode Effect */
+#game-area.fever-active {
+  border-color: #ffd43b;
+  box-shadow: inset 0 0 30px rgba(255, 212, 59, 0.55);
+}
+
 /* Level Up Banner Overlay */
 .level-banner {
   position: absolute;

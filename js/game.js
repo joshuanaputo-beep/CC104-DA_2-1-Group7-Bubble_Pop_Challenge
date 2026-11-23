@@ -63,6 +63,7 @@ const LEVELS = [
   let paused = false;
 
   let freezeTimerMs = 0;
+  let feverTimerMs = 0;
 
   let tickTimer = null, spawnTimer = null;
 
@@ -174,6 +175,13 @@ const LEVELS = [
     } else {
       $area.removeClass("freeze-active");
     }
+    // Fever Mode Timer
+if (feverTimerMs > 0) {
+  feverTimerMs -= TICK_MS;
+  $area.addClass("fever-active");
+} else {
+  $area.removeClass("fever-active");
+}
 
     // Traversal: Grow bubbles
 
@@ -247,11 +255,22 @@ const LEVELS = [
       lastPopTime = now;
     }
 
-    const multiplier = Math.min(comboCount, 5);
+  const multiplier = Math.min(comboCount, 5);
 
-    const basePoints = 10 + Math.round((MAX_SIZE - b.size) / 10);
+const basePoints = 10 + Math.round((MAX_SIZE - b.size) / 10);
 
-    let points = basePoints * multiplier;
+let points = basePoints * multiplier;
+
+// Activate Fever Mode at 10 Combo
+if (comboCount === 10 && feverTimerMs <= 0 && !isChainTrigger) {
+  feverTimerMs = 5000;
+  floatText(b.x, b.y - 22, "FEVER MODE! 2X", "gold");
+}
+
+// Double points during Fever Mode
+if (feverTimerMs > 0) {
+  points *= 2;
+}
 
     // Handle special bubble effects
 
@@ -331,6 +350,7 @@ const LEVELS = [
     comboCount = 0;
     currentLevel = 1;
     freezeTimerMs = 0;
+    feverTimerMs = 0;
 
     running = true;
 
@@ -409,6 +429,7 @@ function togglePause() {
 
     stopTimers();
     clearArea();
+    $area.removeClass("fever-active");
 
     bubbles = [];
     nextId = 1;
@@ -420,6 +441,7 @@ function togglePause() {
     comboCount = 0;
     currentLevel = 1;
     freezeTimerMs = 0;
+    feverTimerMs = 0;
 
     $body.removeClass("theme-lvl-2 theme-lvl-3 theme-lvl-4")
       .addClass("theme-lvl-1");
