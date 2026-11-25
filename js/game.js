@@ -55,7 +55,7 @@ const LEVELS = [
   let score = 0, popped = 0, lives = MAX_LIVES, currentLevel = 1;
 
   let comboCount = 0, lastPopTime = 0;
-
+  let totalClicks = 0, maxCombo = 0;
   let bestScore = parseInt(localStorage.getItem("bubbleBestScore") || "0", 10);
 
   let running = false;
@@ -254,6 +254,10 @@ if (feverTimerMs > 0) {
       comboCount = (now - lastPopTime < 900) ? comboCount + 1 : 1;
       lastPopTime = now;
     }
+    if (comboCount > maxCombo) {
+
+      maxCombo = comboCount;
+    }
 
   const multiplier = Math.min(comboCount, 5);
 
@@ -351,7 +355,9 @@ if (feverTimerMs > 0) {
     currentLevel = 1;
     freezeTimerMs = 0;
     feverTimerMs = 0;
-
+    totalClicks = 0;
+    maxCombo = 0;
+    
     running = true;
 
     paused = false;
@@ -411,16 +417,33 @@ function togglePause() {
       localStorage.setItem("bubbleBestScore", bestScore);
     }
 
+   function endGame() {
+    running = false;
+
+    stopTimers();
+
+    $("#btn-pause").prop("disabled", true);
+
+    if (score > bestScore) {
+      bestScore = score;
+      localStorage.setItem("bubbleBestScore", bestScore);
+    }
+
+    const acc = totalClicks > 0
+      ? Math.min(100, Math.round((popped / totalClicks) * 100))
+      : 0;
+
     $("#overlay-title").text("Game Over");
 
     $("#overlay-text").text(
-      `You reached Level ${currentLevel}, popped ${popped} bubbles, and scored ${score} points!`
+      `Level ${currentLevel} | Score: ${score} | Popped: ${popped} | Max Combo: x${maxCombo} | Acc: ${acc}%`
     );
 
-$("#btn-start").text("▶ PLAY AGAIN");
-$("#bubble-instructions").show();
+    $("#btn-start").text("▶ PLAY AGAIN");
+    $("#bubble-instructions").show();
 
     $("#overlay").removeClass("hidden");
+}
   }
 
   function resetGame() {
@@ -572,11 +595,15 @@ $("#btn-start").text("▶ START GAME");
 
   // ---------- Events ----------
 
-  $area.on("pointerdown", ".bubble", function (e) {
+  $area.on("pointerdown", function () {
+    if (running && !paused) totalClicks++;
+});
+
+$area.on("pointerdown", ".bubble", function (e) {
     e.preventDefault();
 
     popBubble($(this).data("id"));
-  });
+});
 
   $("#btn-start").on("click", startGame);
   $("#btn-reset").on("click", resetGame);
